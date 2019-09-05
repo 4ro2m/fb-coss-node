@@ -6,10 +6,9 @@ const { getFacebookApi, requestUrl, getAccountsData, sendMessage } = require('./
 const _ = require('lodash');
 const moment = require('moment');
 const { logger } = require('./logger');
+const CronJob = require('cron').CronJob;
 
-
-
-const run = async() => {
+const main = async() => {
     await logger('info',`Started`);
     const accounts = await getAccountsData();
 
@@ -107,4 +106,8 @@ const run = async() => {
     await logger('info',`Finished`);
 }
 
-run()
+const schedCosts = new CronJob('0 0 */1 * * *', function(){
+    main();
+}); 
+
+schedCosts.start();
